@@ -37,7 +37,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QLabel" name="fileLabel">
           <property name="text">
@@ -45,7 +45,7 @@
           </property>
          </widget>
         </item>
-        <item alignment="Qt::AlignLeft">
+        <item>
          <widget class="QPushButton" name="fileChooserButton">
           <property name="text">
            <string>Choose projects.json file</string>

@@ -1,5 +1,5 @@
 /*
-   Copyright %{CURRENT_YEAR} by %{AUTHOR} <%{EMAIL}>
+   Copyright 2019 by Alex <alexkp12355@gmail.com>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -43,7 +43,6 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
         }
     }
     if (config.readEntry("programNameMatches", "true") == "true") {
-
         if (term.startsWith("vscode") || term.startsWith("code")) {
             QRegExp exp("(?:vs)?code ([^ ]*) *");
             exp.indexIn(term);
@@ -55,12 +54,12 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
                         );
                     }
                 }
-            }
-        } else {
-            for (const auto &key:projects.keys()) {
-                matches.append(
-                        addMatch("Open " + key, projects.value(key), (float) term.length() / key.length() + 5)
-                );
+            } else {
+                for (const auto &key:projects.keys()) {
+                    matches.append(
+                            addMatch("Open " + key, projects.value(key), (float) term.length() / key.length() + 5)
+                    );
+                }
             }
         }
     }

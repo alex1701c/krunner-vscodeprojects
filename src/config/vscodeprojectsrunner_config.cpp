@@ -1,5 +1,5 @@
 /******************************************************************************
- *   Copyright %{CURRENT_YEAR} by %{AUTHOR} <%{EMAIL}>                        *
+ *   Copyright 2019 by Alex <alexkp12355@gmail.com>                           *
  *                                                                            *
  *  This library is free software; you can redistribute it and/or modify      *
  *  it under the terms of the GNU Lesser General Public License as published  *
@@ -20,27 +20,43 @@
 #include <KSharedConfig>
 #include <KPluginFactory>
 #include <krunner/abstractrunner.h>
+#include <QtCore/QDir>
+#include <QtWidgets/QFileDialog>
 
-K_PLUGIN_FACTORY(VSCodeProjectsRunnerConfigFactory, registerPlugin<VSCodeProjectsRunnerConfig>("kcm_krunner_vscodeprojectsrunner");)
+K_PLUGIN_FACTORY(VSCodeProjectsRunnerConfigFactory,
+                 registerPlugin<VSCodeProjectsRunnerConfig>("kcm_krunner_vscodeprojectsrunner");)
 
 VSCodeProjectsRunnerConfigForm::VSCodeProjectsRunnerConfigForm(QWidget *parent) : QWidget(parent) {
     setupUi(this);
 }
 
-VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QVariantList &args) : KCModule(parent, args) {
+VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QVariantList &args) : KCModule(parent,
+                                                                                                             args) {
     m_ui = new VSCodeProjectsRunnerConfigForm(this);
     auto *layout = new QGridLayout(this);
     layout->addWidget(m_ui, 0, 0);
+
+    const KConfigGroup config = KSharedConfig::openConfig("krunnerrc")->group("Runners").group("VSCodeProjects");
+
+    m_ui->showProjectsByApplication->setChecked(config.readEntry("programNameMatches", "true") == "true");
+    m_ui->showProjectsByName->setChecked(config.readEntry("projectNameMatches", "true") == "true");
+    m_ui->fileLabel->setText(
+            config.readEntry("path",
+                             QDir::homePath() +
+                             "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json"
+            )
+    );
+
+    connect(m_ui->showProjectsByApplication, SIGNAL(clicked(bool)), this, SLOT(changed()));
+    connect(m_ui->showProjectsByApplication, SIGNAL(clicked(bool)), this, SLOT(changed()));
+    connect(m_ui->fileChooserButton, SIGNAL(clicked(bool)), this, SLOT(changed()));
+
+    connect(m_ui->fileChooserButton, SIGNAL(clicked(bool)), this, SLOT(fileChooserDialog()));
+
+
     load();
 
 }
-
-void VSCodeProjectsRunnerConfig::load() {
-    KCModule::load();
-    
-    emit changed(false);
-}
-
 
 void VSCodeProjectsRunnerConfig::save() {
 
@@ -50,8 +66,15 @@ void VSCodeProjectsRunnerConfig::save() {
 }
 
 void VSCodeProjectsRunnerConfig::defaults() {
-    
+
     emit changed(true);
+}
+
+void VSCodeProjectsRunnerConfig::fileChooserDialog() {
+    QString jsonFile = QFileDialog::getOpenFileName(this, tr("Select file"), "", tr("Json File (*.json)"));
+    if (!jsonFile.isEmpty()) {
+        m_ui->fileLabel->setText(jsonFile);
+    }
 }
 
 

@@ -40,10 +40,9 @@ public Q_SLOTS:
 
     void save() override;
 
-    void load() override;
-
     void defaults() override;
 
+    void fileChooserDialog();
 
 private:
     VSCodeProjectsRunnerConfigForm *m_ui;
