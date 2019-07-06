@@ -36,10 +36,35 @@
       <string>VSCodeProjectsRunner Config</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-       <widget class="QLabel" name="label">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="fileLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignLeft">
+         <widget class="QPushButton" name="fileChooserButton">
+          <property name="text">
+           <string>Choose projects.json file</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="showProjectsByName">
         <property name="text">
-         <string>Hello World !</string>
+         <string>Enable search by project name</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="showProjectsByApplication">
+        <property name="text">
+         <string>Show projects when typing code/vscode</string>
         </property>
        </widget>
       </item>

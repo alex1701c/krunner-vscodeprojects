@@ -42,11 +42,25 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
             }
         }
     }
-    if (term == "vscode" || term == "code") {
-        if (config.readEntry("programNameMatches", "true") == "true") {
-            for (const auto &key:projects.keys()) {
-                matches.append(addMatch("Open " + key, projects.value(key), (float) term.length() / key.length() + 5));
+    if (config.readEntry("programNameMatches", "true") == "true") {
 
+        if (term.startsWith("vscode") || term.startsWith("code")) {
+            QRegExp exp("(?:vs)?code ([^ ]*) *");
+            exp.indexIn(term);
+            if (exp.capturedTexts().size() == 2) {
+                for (const auto &key:projects.keys()) {
+                    if (key.startsWith(exp.capturedTexts().at(1), Qt::CaseInsensitive)) {
+                        matches.append(
+                                addMatch("Open " + key, projects.value(key), (float) term.length() / key.length() + 5)
+                        );
+                    }
+                }
+            }
+        } else {
+            for (const auto &key:projects.keys()) {
+                matches.append(
+                        addMatch("Open " + key, projects.value(key), (float) term.length() / key.length() + 5)
+                );
             }
         }
     }
