@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=VSCodeRunner
+Comment=VSCodeProjectsRunner runner
+Icon=code
+
+X-KDE-ServiceTypes=Plasma/Runner
+Type=Service
+X-KDE-Library=krunner_vscodeprojectsrunner
+X-KDE-PluginInfo-Author=%{AUTHOR}
+X-KDE-PluginInfo-Email=%{EMAIL}
+X-KDE-PluginInfo-Name=vscodeprojectsrunner
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=LGPL 2.1+
+X-KDE-PluginInfo-EnabledByDefault=true
