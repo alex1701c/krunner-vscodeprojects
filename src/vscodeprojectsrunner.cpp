@@ -94,7 +94,7 @@ Plasma::QueryMatch VSCodeProjectsRunner::addMatch(const QString &text, const QSt
     match.setText(text);
     match.setData(data);
     match.setRelevance(relevance);
-    match.setIconName("code");
+    match.setIconName("/usr/share/icons/code.svg");
     return match;
 }
 
