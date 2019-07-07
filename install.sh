@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# TODO Enable if the project is on Github
 if [[ $(basename "$PWD") != "VSCodeProjectsRunner"* ]];then
-    #git clone https://github.com/%{USERNAME}/VSCodeProjectsRunner
-    #cd VSCodeProjectsRunner/
-    echo "Please go to the project folder"
-    exit
+    git clone https://github.com/alex1701c/VSCodeProjectsRunner
+    cd VSCodeProjectsRunner/
 fi
 
 mkdir -p build
