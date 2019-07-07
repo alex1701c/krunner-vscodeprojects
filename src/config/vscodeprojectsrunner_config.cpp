@@ -21,6 +21,7 @@
 #include <KPluginFactory>
 #include <krunner/abstractrunner.h>
 #include <QtCore/QDir>
+#include <QDebug>
 #include <QtWidgets/QFileDialog>
 
 K_PLUGIN_FACTORY(VSCodeProjectsRunnerConfigFactory,
@@ -36,9 +37,9 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
     auto *layout = new QGridLayout(this);
     layout->addWidget(m_ui, 0, 0);
 
-    const KConfigGroup config = KSharedConfig::openConfig("krunnerrc")->group("Runners").group("VSCodeProjects");
+    config = KSharedConfig::openConfig("krunnerrc")->group("Runners").group("VSCodeProjects");
 
-    m_ui->showProjectsByApplication->setChecked(config.readEntry("programNameMatches", "true") == "true");
+    m_ui->showProjectsByApplication->setChecked(config.readEntry("appNameMatches", "true") == "true");
     m_ui->showProjectsByName->setChecked(config.readEntry("projectNameMatches", "true") == "true");
     m_ui->fileLabel->setText(
             config.readEntry("path",
@@ -48,7 +49,7 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
     );
 
     connect(m_ui->showProjectsByApplication, SIGNAL(clicked(bool)), this, SLOT(changed()));
-    connect(m_ui->showProjectsByApplication, SIGNAL(clicked(bool)), this, SLOT(changed()));
+    connect(m_ui->showProjectsByName, SIGNAL(clicked(bool)), this, SLOT(changed()));
     connect(m_ui->fileChooserButton, SIGNAL(clicked(bool)), this, SLOT(changed()));
 
     connect(m_ui->fileChooserButton, SIGNAL(clicked(bool)), this, SLOT(fileChooserDialog()));
@@ -59,14 +60,19 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
 }
 
 void VSCodeProjectsRunnerConfig::save() {
-
-    KCModule::save();
+    config.writeEntry("appNameMatches", m_ui->showProjectsByApplication->isChecked() ? "true" : "false");
+    config.writeEntry("projectNameMatches", m_ui->showProjectsByName->isChecked() ? "true" : "false");
+    config.writeEntry("path", m_ui->fileLabel->text());
 
     emit changed();
 }
 
 void VSCodeProjectsRunnerConfig::defaults() {
-
+    m_ui->showProjectsByApplication->setChecked(true);
+    m_ui->showProjectsByName->setChecked(true);
+    m_ui->fileLabel->setText(
+            QDir::homePath() + "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json"
+    );
     emit changed(true);
 }
 

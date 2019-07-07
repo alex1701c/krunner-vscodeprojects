@@ -42,7 +42,7 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
             }
         }
     }
-    if (config.readEntry("programNameMatches", "true") == "true") {
+    if (config.readEntry("appNameMatches", "true") == "true") {
         if (term.startsWith("vscode") || term.startsWith("code")) {
             QRegExp exp("(?:vs)?code ([^ ]*) *");
             exp.indexIn(term);
@@ -77,13 +77,15 @@ void VSCodeProjectsRunner::reloadConfiguration() {
                                         QDir::homePath() +
                                         "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json");
     QFile file(filePath);
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString content = file.readAll();
-    QJsonDocument d = QJsonDocument::fromJson(content.toLocal8Bit());
-
-    for (const auto &item:d.array()) {
-        const auto obj = item.toObject();
-        projects.insert(obj.value("name").toString(), obj.value("rootPath").toString());
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString content = file.readAll();
+        QJsonDocument d = QJsonDocument::fromJson(content.toLocal8Bit());
+        if (d.isArray()) {
+            for (const auto &item:d.array()) {
+                const auto obj = item.toObject();
+                projects.insert(obj.value("name").toString(), obj.value("rootPath").toString());
+            }
+        }
     }
 }
 

@@ -47,6 +47,7 @@ public Q_SLOTS:
 private:
     VSCodeProjectsRunnerConfigForm *m_ui;
 
+    KConfigGroup config;
 };
 
 #endif
