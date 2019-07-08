@@ -35,3 +35,15 @@ After this you should see your runner in the system settings:
 systemsettings5 (Head to "Search")
 
 You can also launch KRunner via Alt-F2 and you will find your runner.
+
+## Screenshots
+
+### Overview of projects
+![Overview of projects](https://raw.githubusercontent.com/alex1701c/Screenshots/master/VSCodeProjectsRunner/app_overview.png)
+
+### Search for project
+![Overview of projects](https://raw.githubusercontent.com/alex1701c/Screenshots/master/VSCodeProjectsRunner/search_project.png)
+
+### Search from overview  
+This might be useful if you have other search plugins   
+![Overview of projects](https://raw.githubusercontent.com/alex1701c/Screenshots/master/VSCodeProjectsRunner/app_filter.png)
