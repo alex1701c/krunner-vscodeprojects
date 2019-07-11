@@ -25,7 +25,6 @@ cd build
 cmake -DQT_PLUGIN_INSTALL_DIR=`kf5-config --qt-plugins` ..
 make
 sudo make install
-sudo curl https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_vscode.svg -o /usr/share/icons/code.svg
 ```
 
 Restart krunner to load the runner (in a terminal type: kquitapp5 krunner;kstart5 krunner )
@@ -34,7 +33,8 @@ After this you should see your runner in the system settings:
 
 systemsettings5 (Head to "Search")
 
-You can also launch KRunner via Alt-F2 and you will find your runner.
+You can also launch KRunner via Alt-F2 and you will find your runner.  
+Credit for icon: https://github.com/microsoft/vscode
 
 ## Screenshots
 

@@ -26,3 +26,5 @@ add_dependencies(krunner_vscodeprojectsrunner kcm_krunner_vscodeprojectsrunner)
 
 install(TARGETS krunner_vscodeprojectsrunner kcm_krunner_vscodeprojectsrunner DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES plasma-runner-vscodeprojectsrunner.desktop config/plasma-runner-vscodeprojectsrunner_config.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+# Credit for icon: https://github.com/microsoft/vscode
+install(FILES code.svg DESTINATION /usr/share/icons)
