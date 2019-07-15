@@ -3,7 +3,6 @@
 #include <KPluginFactory>
 #include <krunner/abstractrunner.h>
 #include <QtCore/QDir>
-#include <QDebug>
 #include <QtWidgets/QFileDialog>
 
 K_PLUGIN_FACTORY(VSCodeProjectsRunnerConfigFactory,
@@ -24,10 +23,7 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
     m_ui->showProjectsByApplication->setChecked(config.readEntry("appNameMatches", "true") == "true");
     m_ui->showProjectsByName->setChecked(config.readEntry("projectNameMatches", "true") == "true");
     m_ui->fileLabel->setText(
-            config.readEntry("path",
-                             QDir::homePath() +
-                             "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json"
-            )
+            config.readEntry("path", QDir::homePath() + "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json")
     );
 
     connect(m_ui->showProjectsByApplication, SIGNAL(clicked(bool)), this, SLOT(changed()));

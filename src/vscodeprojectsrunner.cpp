@@ -21,7 +21,7 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
     if (config.readEntry("projectNameMatches", "true") == "true") {
         for (const auto &key:projects.keys()) {
             if (key.startsWith(term, Qt::CaseInsensitive)) {
-                matches.append(addMatch("Open " + key, projects.value(key), (float) term.length() / key.length()));
+                matches.append(createMatch("Open " + key, projects.value(key), (float) term.length() / key.length()));
             }
         }
     }
@@ -33,14 +33,14 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
                 for (const auto &key:projects.keys()) {
                     if (key.startsWith(exp.capturedTexts().at(1), Qt::CaseInsensitive)) {
                         matches.append(
-                                addMatch("Open " + key, projects.value(key), (float) term.length() / key.length() + 5)
+                                createMatch("Open " + key, projects.value(key), (float) term.length() / key.length())
                         );
                     }
                 }
             } else {
                 for (const auto &key:projects.keys()) {
                     matches.append(
-                            addMatch("Open " + key, projects.value(key), (float) term.length() / key.length() + 5)
+                            createMatch("Open " + key, projects.value(key), (float) term.length() / key.length())
                     );
                 }
             }
@@ -58,7 +58,8 @@ void VSCodeProjectsRunner::init() {
 void VSCodeProjectsRunner::reloadConfiguration() {
     QString filePath = config.readEntry("path",
                                         QDir::homePath() +
-                                        "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json");
+                                        "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json"
+    );
     QFile file(filePath);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QString content = file.readAll();
@@ -72,7 +73,7 @@ void VSCodeProjectsRunner::reloadConfiguration() {
     }
 }
 
-Plasma::QueryMatch VSCodeProjectsRunner::addMatch(const QString &text, const QString &data, const float relevance) {
+Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const QString &data, float relevance) {
     auto match = Plasma::QueryMatch(this);
     match.setText(text);
     match.setData(data);
