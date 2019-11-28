@@ -18,7 +18,9 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
     auto *layout = new QGridLayout(this);
     layout->addWidget(m_ui, 0, 0);
 
-    config = KSharedConfig::openConfig("krunnerrc")->group("Runners").group("VSCodeProjects");
+    config = KSharedConfig::openConfig(QDir::homePath() + "/.config/krunnerplugins/vscoderunnerrc")
+            ->group("Config");
+    config.config()->reparseConfiguration();
 
     m_ui->showProjectsByApplication->setChecked(config.readEntry("appNameMatches", "true") == "true");
     m_ui->showProjectsByName->setChecked(config.readEntry("projectNameMatches", "true") == "true");
@@ -31,10 +33,6 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
     connect(m_ui->fileChooserButton, SIGNAL(clicked(bool)), this, SLOT(changed()));
 
     connect(m_ui->fileChooserButton, SIGNAL(clicked(bool)), this, SLOT(fileChooserDialog()));
-
-
-    load();
-
 }
 
 void VSCodeProjectsRunnerConfig::save() {
@@ -55,7 +53,7 @@ void VSCodeProjectsRunnerConfig::defaults() {
 }
 
 void VSCodeProjectsRunnerConfig::fileChooserDialog() {
-    QString jsonFile = QFileDialog::getOpenFileName(this, tr("Select file"), "", tr("Json File (*.json)"));
+    const QString jsonFile = QFileDialog::getOpenFileName(this, tr("Select file"), "", tr("Json File (*.json)"));
     if (!jsonFile.isEmpty()) {
         m_ui->fileLabel->setText(jsonFile);
     }

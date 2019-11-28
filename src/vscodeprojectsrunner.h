@@ -2,6 +2,16 @@
 #define VSCODEPROJECTSRUNNER_H
 
 #include <KRunner/AbstractRunner>
+#include <QtCore/QFileSystemWatcher>
+
+class VSCodeProject {
+public:
+    int position;
+    QString name;
+    QString path;
+
+    VSCodeProject(int position, const QString &name, const QString &path) : position(position), name(name), path(path) {}
+};
 
 class VSCodeProjectsRunner : public Plasma::AbstractRunner {
 Q_OBJECT
@@ -11,24 +21,24 @@ public:
 
     ~VSCodeProjectsRunner() override;
 
-    KConfigGroup config;
+    const QIcon icon = QIcon::fromTheme("code_runner");
+    QRegExp nameQueryRegex = QRegExp("(?:vs)?code ([^ ]*) *");
+    QFileSystemWatcher watcher;
+    QList<VSCodeProject> projects;
+    bool projectNameMatches, appNameMatches;
 
-    QMap<QString, QString> projects;
-
-    Plasma::QueryMatch createMatch(const QString &text, const QString &data, float relevance);
+    Plasma::QueryMatch createMatch(const QString &text, const QString &data, double relevance);
 
 protected Q_SLOTS:
 
     void init() override;
 
+    void reloadPluginConfiguration(const QString &path = "");
 
 public: // Plasma::AbstractRunner API
     void match(Plasma::RunnerContext &context) override;
 
     void run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) override;
-
-    void reloadConfiguration() override;
-
 };
 
 #endif
