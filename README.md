@@ -1,6 +1,7 @@
-## Required Dependencies
-
+## VSCode Projects Runner
 This plugin use the Project Manager plugin from VSCode to read the projects. 
+
+## Required Dependencies
 
 Debian/Ubuntu:  
 `sudo apt install cmake extra-cmake-modules build-essential libkf5runner-dev libkf5textwidgets-dev qtdeclarative5-dev gettext`
@@ -13,14 +14,14 @@ Fedora
 ## Build instructions
 
 The easiest way to install is:  
-`curl https://raw.githubusercontent.com/alex1701c/VSCodeProjectsRunner/master/install.sh | bash`  
+`curl https://raw.githubusercontent.com/alex1701c/krunner-vscodeprojects/master/install.sh | bash`  
 Or you can install it without admin privileges:  
-`curl https://raw.githubusercontent.com/alex1701c/VSCodeProjectsRunner/master/install-user.sh | bash`  
+`curl https://raw.githubusercontent.com/alex1701c/krunner-vscodeprojects/master/install-user.sh | bash`  
 
 Manual steps:  
 ```
-git clone https://github.com/alex1701c/VSCodeProjectsRunner
-cd VSCodeProjectsRunner
+git clone https://github.com/alex1701c/krunner-vscodeprojects
+cd krunner-vscodeprojects
 mkdir -p build
 cd build
 cmake -DQT_PLUGIN_INSTALL_DIR=`kf5-config --qt-plugins` -DCMAKE_BUILD_TYPE=Release ..

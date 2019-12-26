@@ -3,9 +3,9 @@
 # Exit if something fails
 set -e
 
-if [[ $(basename "$PWD") != "VSCodeProjectsRunner"* ]];then
-    git clone https://github.com/alex1701c/VSCodeProjectsRunner
-    cd VSCodeProjectsRunner/
+if [[ $(basename "$PWD") != "krunner-vscodeprojects"* ]];then
+    git clone https://github.com/alex1701c/krunner-vscodeprojects
+    cd krunner-vscodeprojects/
 fi
 
 # Create folders
