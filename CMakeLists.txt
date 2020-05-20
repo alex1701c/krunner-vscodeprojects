@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(vscodeprojectsrunner)
+set(CMAKE_PROJECT_VERSION  "1.0.0")
+set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/alex1701c/krunner-vscodeprojects")
+set(CMAKE_PROJECT_AUTHOR "alex1701c")
+set(CMAKE_PROJECT_AUTHOR_EMAIL "alex1701c.dev@gmx.net")
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_MODULE_PATH})
@@ -16,3 +20,18 @@ include(FeatureSummary)
 add_subdirectory(src)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
+# CPack configuration
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A Krunner Plugin which allows you to open your recent VSCode projects")
+set(CPACK_PACKAGE_NAME krunner-${CMAKE_PROJECT_NAME})
+set(CPACK_PACKAGE_VERSION "${CMAKE_PROJECT_VERSION}")
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CMAKE_PROJECT_AUTHOR}")
+set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
+set(CPACK_GENERATOR "DEB;RPM")
+# KUbuntu 18.04 dependencies
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "plasma-workspace (>= 5.12)")
+set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
+set(CPACK_RPM_PACKAGE_REQUIRES "plasma-workspace >= 5.12")
+
+INCLUDE(CPack)
