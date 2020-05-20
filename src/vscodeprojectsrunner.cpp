@@ -24,7 +24,7 @@ void VSCodeProjectsRunner::init() {
     }
     // Add file watcher for config
     watcher.addPath(configFolder + "vscoderunnerrc");
-    connect(&watcher, SIGNAL(fileChanged(QString)), this, SLOT(reloadPluginConfiguration(QString)));
+    connect(&watcher, &QFileSystemWatcher::fileChanged, this, &VSCodeProjectsRunner::reloadPluginConfiguration);
 
     reloadPluginConfiguration();
 }
@@ -63,8 +63,8 @@ void VSCodeProjectsRunner::reloadPluginConfiguration(const QString &path) {
         }
     }
 
-    appNameMatches = config.readEntry("appNameMatches", "true") == "true";
-    projectNameMatches = config.readEntry("projectNameMatches", "true") == "true";
+    appNameMatches = config.readEntry("appNameMatches", true);
+    projectNameMatches = config.readEntry("projectNameMatches", true);
 }
 
 void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
@@ -73,17 +73,18 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
     QList<Plasma::QueryMatch> matches;
 
     if (projectNameMatches) {
-        for (const auto &project:projects) {
+        for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(term, Qt::CaseInsensitive)) {
                 matches.append(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
             }
         }
     }
     if (appNameMatches) {
-        if (term.startsWith("vscode") || term.startsWith("code")) {
-            nameQueryRegex.indexIn(term);
-            for (const auto &project:projects) {
-                if (project.name.startsWith(nameQueryRegex.capturedTexts().at(1), Qt::CaseInsensitive)) {
+        const auto match = nameQueryRegex.match(term);
+        const QString projectQuery = match.lastCapturedIndex() == 1 ? match.captured(1).trimmed() : QString();
+        if (match.hasMatch()) {
+            for (const auto &project: qAsConst(projects)) {
+                if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
                     matches.append(
                             createMatch("Open " + project.name, project.path, (double) project.position / 20)
                     );
@@ -107,7 +108,7 @@ Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const 
 void VSCodeProjectsRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) {
     Q_UNUSED(context)
 
-    QProcess::startDetached("code", QStringList() << match.data().toString());
+    QProcess::startDetached("code", {match.data().toString()});
 }
 
 

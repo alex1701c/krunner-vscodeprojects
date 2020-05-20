@@ -2,7 +2,8 @@
 #define VSCODEPROJECTSRUNNER_H
 
 #include <KRunner/AbstractRunner>
-#include <QtCore/QFileSystemWatcher>
+#include <QFileSystemWatcher>
+#include <QRegularExpression>
 
 class VSCodeProject {
 public:
@@ -22,7 +23,7 @@ public:
     ~VSCodeProjectsRunner() override;
 
     const QIcon icon = QIcon::fromTheme("code_runner");
-    QRegExp nameQueryRegex = QRegExp("(?:vs)?code ([^ ]*) *");
+    const QRegularExpression nameQueryRegex = QRegularExpression("^(?:vs)?code( +[^ ]*)? *");
     QFileSystemWatcher watcher;
     QList<VSCodeProject> projects;
     bool projectNameMatches, appNameMatches;

@@ -22,8 +22,8 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
             ->group("Config");
     config.config()->reparseConfiguration();
 
-    m_ui->showProjectsByApplication->setChecked(config.readEntry("appNameMatches", "true") == "true");
-    m_ui->showProjectsByName->setChecked(config.readEntry("projectNameMatches", "true") == "true");
+    m_ui->showProjectsByApplication->setChecked(config.readEntry("appNameMatches", true));
+    m_ui->showProjectsByName->setChecked(config.readEntry("projectNameMatches", true));
     m_ui->fileLabel->setText(
             config.readEntry("path", QDir::homePath() + "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json")
     );
@@ -36,11 +36,11 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
 }
 
 void VSCodeProjectsRunnerConfig::save() {
-    config.writeEntry("appNameMatches", m_ui->showProjectsByApplication->isChecked() ? "true" : "false");
-    config.writeEntry("projectNameMatches", m_ui->showProjectsByName->isChecked() ? "true" : "false");
+    config.writeEntry("appNameMatches", m_ui->showProjectsByApplication->isChecked());
+    config.writeEntry("projectNameMatches", m_ui->showProjectsByName->isChecked());
     config.writeEntry("path", m_ui->fileLabel->text());
 
-    emit changed();
+    emit changed(true);
 }
 
 void VSCodeProjectsRunnerConfig::defaults() {
@@ -53,7 +53,8 @@ void VSCodeProjectsRunnerConfig::defaults() {
 }
 
 void VSCodeProjectsRunnerConfig::fileChooserDialog() {
-    const QString jsonFile = QFileDialog::getOpenFileName(this, tr("Select file"), "", tr("Json File (*.json)"));
+    const QString jsonFile = QFileDialog::getOpenFileName(this, tr("Select file"),
+                                                          QString(), tr("Json File (*.json)"));
     if (!jsonFile.isEmpty()) {
         m_ui->fileLabel->setText(jsonFile);
     }
