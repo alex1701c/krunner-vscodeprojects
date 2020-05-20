@@ -56,7 +56,8 @@ void VSCodeProjectsRunner::reloadPluginConfiguration(const QString &path) {
                 const auto obj = item.toObject();
                 if (obj.value("enabled").toBool()) {
                     --position;
-                    projects.append(VSCodeProject(position, obj.value("name").toString(), obj.value("rootPath").toString()));
+                    const QString projectPath = obj.value("rootPath").toString().replace(QLatin1String("$home"), QDir::homePath());
+                    projects.append(VSCodeProject(position, obj.value("name").toString(), projectPath));
                 }
             }
         }
