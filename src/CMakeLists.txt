@@ -24,9 +24,14 @@ target_link_libraries(kcm_krunner_vscodeprojectsrunner
 add_dependencies(krunner_vscodeprojectsrunner kcm_krunner_vscodeprojectsrunner)
 
 
-install(TARGETS krunner_vscodeprojectsrunner kcm_krunner_vscodeprojectsrunner DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES plasma-runner-vscodeprojectsrunner.desktop config/plasma-runner-vscodeprojectsrunner_config.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
-
+install(TARGETS kcm_krunner_vscodeprojectsrunner DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS krunner_vscodeprojectsrunner DESTINATION ${PLUGIN_INSTALL_DIR}/kf5/krunner/)
+install(FILES config/plasma-runner-vscodeprojectsrunner_config.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+if(KF5Runner_VERSION VERSION_LESS 5.72.0)
+    install(FILES plasma-runner-vscodeprojectsrunner.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+else()
+    kcoreaddons_desktop_to_json(krunner_vscodeprojectsrunner plasma-runner-vscodeprojectsrunner.desktop)
+endif()
 # Credit for icon: https://github.com/microsoft/vscode
 set(ICON_INSTALL_DIR "/usr/share/pixmaps/" CACHE STRING "Default icon directory")
 install(FILES code_runner.svg DESTINATION ${ICON_INSTALL_DIR})
