@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(vscodeprojectsrunner)
-set(CMAKE_PROJECT_VERSION  "1.0.0")
+set(CMAKE_PROJECT_VERSION  "1.0.1")
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/alex1701c/krunner-vscodeprojects")
 set(CMAKE_PROJECT_AUTHOR "alex1701c")
 set(CMAKE_PROJECT_AUTHOR_EMAIL "alex1701c.dev@gmx.net")
