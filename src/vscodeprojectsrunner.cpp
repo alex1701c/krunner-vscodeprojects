@@ -2,8 +2,9 @@
 
 // KF
 #include <KLocalizedString>
-#include <QtGui/QtGui>
+#include <QtCore>
 #include <KSharedConfig>
+#include "utilities.h"
 
 VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &args)
         : Plasma::AbstractRunner(parent, args) {
@@ -13,25 +14,17 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &
 VSCodeProjectsRunner::~VSCodeProjectsRunner() = default;
 
 void VSCodeProjectsRunner::init() {
-    const QString configFolder = QDir::homePath() + "/.config/krunnerplugins/";
-    const QDir configDir(configFolder);
-    if (!configDir.exists()) configDir.mkpath(configFolder);
-    // Create file
-    QFile configFile(configFolder + "vscoderunnerrc");
-    if (!configFile.exists()) {
-        configFile.open(QIODevice::WriteOnly);
-        configFile.close();
-    }
+    initializeConfigFile();
     // Add file watcher for config
-    watcher.addPath(configFolder + "vscoderunnerrc");
+    watcher.addPath( QDir::homePath() + "/.config/krunnerplugins/vscoderunnerrc");
     connect(&watcher, &QFileSystemWatcher::fileChanged, this, &VSCodeProjectsRunner::reloadPluginConfiguration);
 
     reloadPluginConfiguration();
 }
 
 void VSCodeProjectsRunner::reloadPluginConfiguration(const QString &path) {
-    const auto config = KSharedConfig::openConfig(QDir::homePath() + "/.config/krunnerplugins/vscoderunnerrc")
-            ->group("Config");
+    const auto config = KSharedConfig::openConfig(QStringLiteral("krunnerplugins/vscoderunnerrc"))
+                        ->group("Config");
 
     // If the file gets edited with a text editor, it often gets replaced by the edited version
     // https://stackoverflow.com/a/30076119/9342842
@@ -41,23 +34,24 @@ void VSCodeProjectsRunner::reloadPluginConfiguration(const QString &path) {
         }
     }
 
-    const QString filePath =
-            config.readEntry("path", QDir::homePath() +
-                                     "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json");
+    const QString filePath = config.readEntry("path", QDir::homePath() +
+                                "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json");
     QFile file(filePath);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString content = file.readAll();
         const QJsonDocument d = QJsonDocument::fromJson(content.toLocal8Bit());
         if (d.isArray()) {
             int position = d.array().size();
+            const auto array = d.array();
             projects.clear();
 
-            for (const auto &item:d.array()) {
+            for (const auto &item : array) {
                 const auto obj = item.toObject();
-                if (obj.value("enabled").toBool()) {
+                if (obj.value(QStringLiteral("enabled")).toBool()) {
                     --position;
-                    const QString projectPath = obj.value("rootPath").toString().replace(QLatin1String("$home"), QDir::homePath());
-                    projects.append(VSCodeProject(position, obj.value("name").toString(), projectPath));
+                    const QString projectPath = obj.value(QStringLiteral("rootPath")).toString()
+                                                    .replace(QLatin1String("$home"), QDir::homePath());
+                    projects.append(VSCodeProject(position, obj.value(QStringLiteral("name")).toString(), projectPath));
                 }
             }
         }
@@ -70,30 +64,26 @@ void VSCodeProjectsRunner::reloadPluginConfiguration(const QString &path) {
 void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
     if (!context.isValid()) return;
     const QString term = context.query();
-    QList<Plasma::QueryMatch> matches;
 
-    if (projectNameMatches) {
+    if (projectNameMatches && (term.size() > 2 || context.singleRunnerQueryMode())) {
         for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(term, Qt::CaseInsensitive)) {
-                matches.append(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
             }
         }
     }
     if (appNameMatches) {
         const auto match = nameQueryRegex.match(term);
-        const QString projectQuery = match.lastCapturedIndex() == 1 ? match.captured(1).trimmed() : QString();
-        if (match.hasMatch()) {
-            for (const auto &project: qAsConst(projects)) {
-                if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
-                    matches.append(
-                            createMatch("Open " + project.name, project.path, (double) project.position / 20)
-                    );
-                }
+        if (!match.hasMatch()) return;
+        const QString projectQuery = match.captured(QStringLiteral("query"));
+        for (const auto &project: qAsConst(projects)) {
+            if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
+                context.addMatch(
+                        createMatch("Open " + project.name, project.path, (double) project.position / 20)
+                );
             }
         }
     }
-
-    context.addMatches(matches);
 }
 
 Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const QString &data, double relevance) {
@@ -108,7 +98,7 @@ Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const 
 void VSCodeProjectsRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) {
     Q_UNUSED(context)
 
-    QProcess::startDetached("code", {match.data().toString()});
+    QProcess::startDetached(QStringLiteral("code"), {match.data().toString()});
 }
 
 

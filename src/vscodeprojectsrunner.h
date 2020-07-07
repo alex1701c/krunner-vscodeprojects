@@ -22,8 +22,8 @@ public:
 
     ~VSCodeProjectsRunner() override;
 
-    const QIcon icon = QIcon::fromTheme("code_runner");
-    const QRegularExpression nameQueryRegex = QRegularExpression("^(?:vs)?code( +[^ ]*)? *");
+    const QIcon icon = QIcon::fromTheme(QStringLiteral("code_runner"));
+    const QRegularExpression nameQueryRegex = QRegularExpression(QStringLiteral("^(vs)?code( (?<query>.+))?$"));
     QFileSystemWatcher watcher;
     QList<VSCodeProject> projects;
     bool projectNameMatches, appNameMatches;
@@ -34,7 +34,7 @@ protected Q_SLOTS:
 
     void init() override;
 
-    void reloadPluginConfiguration(const QString &path = "");
+    void reloadPluginConfiguration(const QString &path = QString());
 
 public: // Plasma::AbstractRunner API
     void match(Plasma::RunnerContext &context) override;
