@@ -18,5 +18,5 @@ major_version=$(echo $krunner_version | cut -d "." -f -1)
 minor_version=$(echo $krunner_version | cut -d "." -f2)
 if [[ (("$major_version" < "5")) || (("$minor_version" < "17")) ]]
 then
-    kstart5 --windowclass krunner
+    kstart5 krunner --windowclass krunner
 fi
