@@ -13,6 +13,8 @@ Fedora
 
 ## Build instructions
 
+For archlinux users there is [AUR](https://aur.archlinux.org/packages/krunner-vscodeprojects/) or [AUR (git)](https://aur.archlinux.org/packages/krunner-vscodeprojects-git/).  
+
 The easiest way to install is:  
 `curl https://raw.githubusercontent.com/alex1701c/krunner-vscodeprojects/master/install.sh | bash`  
 Or you can install it without admin privileges:  
