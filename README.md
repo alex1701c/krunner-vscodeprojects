@@ -1,5 +1,5 @@
 ## VSCode Projects Runner
-This plugin use the Project Manager plugin from VSCode to read the projects. 
+This plugin use the [Project Manager plugin](https://github.com/alefragnani/vscode-project-manager) from VSCode to read the projects.
 
 ## Required Dependencies
 
