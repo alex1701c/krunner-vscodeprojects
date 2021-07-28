@@ -1,11 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
-
+cmake_minimum_required(VERSION 3.5)
 project(vscodeprojectsrunner)
 set(CMAKE_PROJECT_VERSION  "1.0.1")
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/alex1701c/krunner-vscodeprojects")
 set(CMAKE_PROJECT_AUTHOR "alex1701c")
 set(CMAKE_PROJECT_AUTHOR_EMAIL "alex1701c.dev@gmx.net")
-
+set(KF5_MIN_VERSION 5.72.0)
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_MODULE_PATH})
 

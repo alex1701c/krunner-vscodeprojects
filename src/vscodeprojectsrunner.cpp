@@ -4,7 +4,6 @@
 #include <KLocalizedString>
 #include <QtCore>
 #include <KSharedConfig>
-#include <krunner_version.h>
 #include "utilities.h"
 
 VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &args)
@@ -103,11 +102,7 @@ void VSCodeProjectsRunner::run(const Plasma::RunnerContext &context, const Plasm
 }
 
 
-#if KRUNNER_VERSION >= QT_VERSION_CHECK(5, 72, 0)
-K_EXPORT_PLASMA_RUNNER_WITH_JSON(VSCodeProjectsRunner, "plasma-runner-vscodeprojectsrunner.json")
-#else
-K_EXPORT_PLASMA_RUNNER(vscodeprojectsrunner, VSCodeProjectsRunner)
-#endif
+K_EXPORT_PLASMA_RUNNER_WITH_JSON(VSCodeProjectsRunner, "vscodeprojectsrunner.json")
 
 // needed for the QObject subclass declared as part of K_EXPORT_PLASMA_RUNNER
 #include "vscodeprojectsrunner.moc"
