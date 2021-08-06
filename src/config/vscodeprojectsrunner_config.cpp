@@ -4,7 +4,6 @@
 #include <krunner/abstractrunner.h>
 #include <QtCore/QDir>
 #include <QtWidgets/QFileDialog>
-#include "../utilities.h"
 
 K_PLUGIN_FACTORY(VSCodeProjectsRunnerConfigFactory,
                  registerPlugin<VSCodeProjectsRunnerConfig>(QStringLiteral("kcm_krunner_vscodeprojectsrunner"));)
@@ -18,9 +17,7 @@ VSCodeProjectsRunnerConfig::VSCodeProjectsRunnerConfig(QWidget *parent, const QV
     m_ui = new VSCodeProjectsRunnerConfigForm(this);
     auto *layout = new QGridLayout(this);
     layout->addWidget(m_ui, 0, 0);
-    initializeConfigFile();
-    config = KSharedConfig::openConfig(QStringLiteral("krunnerplugins/vscoderunnerrc"))->group("Config");
-    config.config()->reparseConfiguration();
+    config = KSharedConfig::openConfig(QStringLiteral("krunnerrc"))->group("Runners").group("vscodeprojectsrunner");
 
     m_ui->showProjectsByApplication->setChecked(config.readEntry("appNameMatches", true));
     m_ui->showProjectsByName->setChecked(config.readEntry("projectNameMatches", true));
@@ -38,6 +35,7 @@ void VSCodeProjectsRunnerConfig::save() {
     config.writeEntry("appNameMatches", m_ui->showProjectsByApplication->isChecked());
     config.writeEntry("projectNameMatches", m_ui->showProjectsByName->isChecked());
     config.writeEntry("path", m_ui->fileLabel->text());
+    config.sync();
 
     Q_EMIT changed(false);
 }

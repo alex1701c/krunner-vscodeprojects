@@ -4,7 +4,6 @@
 #include <KLocalizedString>
 #include <QtCore>
 #include <KSharedConfig>
-#include "utilities.h"
 
 VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &args)
         : Plasma::AbstractRunner(parent, args) {
@@ -13,29 +12,10 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &
 
 VSCodeProjectsRunner::~VSCodeProjectsRunner() = default;
 
-void VSCodeProjectsRunner::init() {
-    initializeConfigFile();
-    // Add file watcher for config
-    watcher.addPath( QDir::homePath() + "/.config/krunnerplugins/vscoderunnerrc");
-    connect(&watcher, &QFileSystemWatcher::fileChanged, this, &VSCodeProjectsRunner::reloadPluginConfiguration);
-
-    reloadPluginConfiguration();
-}
-
-void VSCodeProjectsRunner::reloadPluginConfiguration(const QString &path) {
-    const auto config = KSharedConfig::openConfig(QStringLiteral("krunnerplugins/vscoderunnerrc"))
-                        ->group("Config");
-
-    // If the file gets edited with a text editor, it often gets replaced by the edited version
-    // https://stackoverflow.com/a/30076119/9342842
-    if (!path.isEmpty()) {
-        if (QFile::exists(path)) {
-            watcher.addPath(path);
-        }
-    }
-
-    const QString filePath = config.readEntry("path", QDir::homePath() +
+void VSCodeProjectsRunner::reloadConfiguration() {
+    const QString filePath = config().readEntry("path", QDir::homePath() +
                                 "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json");
+    qWarning() << filePath << config().name();
     QFile file(filePath);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString content = file.readAll();
@@ -57,8 +37,8 @@ void VSCodeProjectsRunner::reloadPluginConfiguration(const QString &path) {
         }
     }
 
-    appNameMatches = config.readEntry("appNameMatches", true);
-    projectNameMatches = config.readEntry("projectNameMatches", true);
+    appNameMatches = config().readEntry("appNameMatches", true);
+    projectNameMatches = config().readEntry("projectNameMatches", true);
 }
 
 void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
