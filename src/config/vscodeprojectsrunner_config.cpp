@@ -6,7 +6,7 @@
 #include <QtWidgets/QFileDialog>
 
 K_PLUGIN_FACTORY(VSCodeProjectsRunnerConfigFactory,
-                 registerPlugin<VSCodeProjectsRunnerConfig>(QStringLiteral("kcm_krunner_vscodeprojectsrunner"));)
+                 registerPlugin<VSCodeProjectsRunnerConfig>();)
 
 VSCodeProjectsRunnerConfigForm::VSCodeProjectsRunnerConfigForm(QWidget *parent) : QWidget(parent) {
     setupUi(this);
