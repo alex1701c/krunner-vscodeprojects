@@ -13,10 +13,11 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &
 VSCodeProjectsRunner::~VSCodeProjectsRunner() = default;
 
 void VSCodeProjectsRunner::reloadConfiguration() {
-    const QString filePath = config().readEntry("path", QDir::homePath() +
-                                "/.config/Code/User/globalStorage/alefragnani.project-manager/projects.json");
-    qWarning() << filePath << config().name();
-    QFile file(filePath);
+    const QString projectManagerRoot = QDir::homePath() + "/.config/Code/User/globalStorage/alefragnani.project-manager/";
+    const QString filePath = config().readEntry("baseDir", projectManagerRoot);
+
+    // Saved projects
+    QFile file(filePath + "/projects.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString content = file.readAll();
         const QJsonDocument d = QJsonDocument::fromJson(content.toLocal8Bit());
@@ -33,6 +34,22 @@ void VSCodeProjectsRunner::reloadConfiguration() {
                                                     .replace(QLatin1String("$home"), QDir::homePath());
                     projects.append(VSCodeProject(position, obj.value(QStringLiteral("name")).toString(), projectPath));
                 }
+            }
+        }
+    }
+    // git indexted projects
+    QFile gitIndexFile(filePath + "/projects_cache_git.json");
+    if (gitIndexFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QString content = gitIndexFile.readAll();
+        const QJsonDocument d = QJsonDocument::fromJson(content.toLocal8Bit());
+        if (d.isArray()) {
+            int prevCount = projects.count();
+            int position = d.array().size();
+            const auto array = d.array();
+            for (const auto &item : array) {
+                const auto obj = item.toObject();
+                projects.append(
+                    VSCodeProject(position + prevCount, obj.value(QStringLiteral("name")).toString(), obj.value(QStringLiteral("fullPath")).toString()));
             }
         }
     }

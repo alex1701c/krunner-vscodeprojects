@@ -48,7 +48,7 @@
         <item>
          <widget class="QPushButton" name="fileChooserButton">
           <property name="text">
-           <string>Choose projects.json file</string>
+           <string>Choose basedir where projects.json file is located</string>
           </property>
          </widget>
         </item>
