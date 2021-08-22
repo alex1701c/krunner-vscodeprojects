@@ -5,28 +5,7 @@ set(vscodeprojectsrunner_SRCS vscodeprojectsrunner.cpp)
 add_library(krunner_vscodeprojectsrunner MODULE ${vscodeprojectsrunner_SRCS})
 target_link_libraries(krunner_vscodeprojectsrunner KF5::Runner KF5::I18n)
 
-set(kcm_krunner_vscodeprojectsrunner_SRCS
-        config/vscodeprojectsrunner_config.cpp
-        )
-
-ki18n_wrap_ui(kcm_krunner_vscodeprojectsrunner_SRCS config/vscodeprojectsrunner_config.ui)
-add_library(kcm_krunner_vscodeprojectsrunner MODULE ${kcm_krunner_vscodeprojectsrunner_SRCS})
-target_link_libraries(kcm_krunner_vscodeprojectsrunner
-        Qt5::Core
-        Qt5::Gui
-        KF5::CoreAddons
-        KF5::ConfigCore
-        KF5::I18n
-        KF5::ConfigWidgets
-        KF5::Runner
-        )
-
-add_dependencies(krunner_vscodeprojectsrunner kcm_krunner_vscodeprojectsrunner)
-
-
-install(TARGETS kcm_krunner_vscodeprojectsrunner DESTINATION ${KDE_INSTALL_QTPLUGINDIR})
 install(TARGETS krunner_vscodeprojectsrunner DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/kf5/krunner/)
-install(FILES config/plasma-runner-vscodeprojectsrunner_config.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 # Credit for icon: https://github.com/microsoft/vscode
 set(KDE_INSTALL_ICONDIR "/usr/share/pixmaps/" CACHE STRING "Default icon directory")
 install(FILES code_runner.svg DESTINATION ${KDE_INSTALL_ICONDIR})
