@@ -13,11 +13,10 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &
 VSCodeProjectsRunner::~VSCodeProjectsRunner() = default;
 
 void VSCodeProjectsRunner::reloadConfiguration() {
-    const QString projectManagerRoot = QDir::homePath() + "/.config/Code/User/globalStorage/alefragnani.project-manager/";
-    const QString filePath = config().readEntry("baseDir", projectManagerRoot);
+    const QString projectManagerRoot = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/Code/User/globalStorage/alefragnani.project-manager/";
 
     // Saved projects
-    QFile file(filePath + "/projects.json");
+    QFile file(projectManagerRoot + "projects.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString content = file.readAll();
         const QJsonDocument d = QJsonDocument::fromJson(content.toLocal8Bit());
@@ -38,7 +37,7 @@ void VSCodeProjectsRunner::reloadConfiguration() {
         }
     }
     // git indexted projects
-    QFile gitIndexFile(filePath + "/projects_cache_git.json");
+    QFile gitIndexFile(projectManagerRoot + "projects_cache_git.json");
     if (gitIndexFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString content = gitIndexFile.readAll();
         const QJsonDocument d = QJsonDocument::fromJson(content.toLocal8Bit());
