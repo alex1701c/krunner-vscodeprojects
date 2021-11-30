@@ -29,7 +29,6 @@ void VSCodeProjectsRunner::reloadConfiguration() {
                     --position;
                     const QString projectPath = obj.value(QStringLiteral("rootPath")).toString()
                                                     .replace(QLatin1String("$home"), QDir::homePath());
-                                                    qWarning()<<Q_FUNC_INFO<<projectPath<<QFileInfo::exists(projectPath);
                     projects.append(VSCodeProject{position, obj.value(QStringLiteral("name")).toString(), projectPath});
                 }
             }
@@ -64,7 +63,9 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
     if (projectNameMatches && (term.size() > 2 || context.singleRunnerQueryMode())) {
         for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(term, Qt::CaseInsensitive)) {
-                context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                if (QFileInfo::exists(project.path)) {
+                    context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                }
             }
         }
     }
@@ -74,9 +75,11 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
         const QString projectQuery = match.captured(QStringLiteral("query"));
         for (const auto &project: qAsConst(projects)) {
             if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
-                context.addMatch(
-                        createMatch("Open " + project.name, project.path, (double) project.position / 20)
-                );
+                if (QFileInfo::exists(project.path)) {
+                    context.addMatch(
+                            createMatch("Open " + project.name, project.path, (double) project.position / 20)
+                    );
+                }
             }
         }
     }
