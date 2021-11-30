@@ -90,7 +90,7 @@ Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const 
     match.setText(text);
     match.setData(data);
     match.setRelevance(relevance);
-    match.setIcon(icon);
+    match.setIcon(icon());
     return match;
 }
 
