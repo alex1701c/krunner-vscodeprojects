@@ -18,7 +18,7 @@ class VSCodeProjectsRunner : public Plasma::AbstractRunner {
 Q_OBJECT
 
 public:
-    VSCodeProjectsRunner(QObject *parent, const QVariantList &args);
+    VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
     ~VSCodeProjectsRunner() override;
 

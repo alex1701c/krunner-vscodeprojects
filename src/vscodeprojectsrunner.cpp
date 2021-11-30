@@ -5,8 +5,8 @@
 #include <QtCore>
 #include <KSharedConfig>
 
-VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const QVariantList &args)
-        : Plasma::AbstractRunner(parent, args) {
+VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+        : Plasma::AbstractRunner(parent, data, args) {
     setObjectName(QStringLiteral("VSCodeProjectsRunner"));
 }
 
