@@ -10,8 +10,6 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaDat
     setObjectName(QStringLiteral("VSCodeProjectsRunner"));
 }
 
-VSCodeProjectsRunner::~VSCodeProjectsRunner() = default;
-
 void VSCodeProjectsRunner::reloadConfiguration() {
     const QString projectManagerRoot = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/Code/User/globalStorage/alefragnani.project-manager/";
 

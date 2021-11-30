@@ -20,8 +20,6 @@ Q_OBJECT
 public:
     VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
-    ~VSCodeProjectsRunner() override;
-
     const QIcon icon = QIcon::fromTheme(QStringLiteral("code_runner"));
     const QRegularExpression nameQueryRegex = QRegularExpression(QStringLiteral("^(vs)?code( (?<query>.+))?$"));
     QList<VSCodeProject> projects;
