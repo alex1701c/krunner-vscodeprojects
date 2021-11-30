@@ -29,7 +29,8 @@ void VSCodeProjectsRunner::reloadConfiguration() {
                     --position;
                     const QString projectPath = obj.value(QStringLiteral("rootPath")).toString()
                                                     .replace(QLatin1String("$home"), QDir::homePath());
-                    projects.append(VSCodeProject(position, obj.value(QStringLiteral("name")).toString(), projectPath));
+                                                    qWarning()<<Q_FUNC_INFO<<projectPath<<QFileInfo::exists(projectPath);
+                    projects.append(VSCodeProject{position, obj.value(QStringLiteral("name")).toString(), projectPath});
                 }
             }
         }
@@ -45,8 +46,9 @@ void VSCodeProjectsRunner::reloadConfiguration() {
             const auto array = d.array();
             for (const auto &item : array) {
                 const auto obj = item.toObject();
+                const QString projectPath = obj.value(QStringLiteral("fullPath")).toString();
                 projects.append(
-                    VSCodeProject(position + prevCount, obj.value(QStringLiteral("name")).toString(), obj.value(QStringLiteral("fullPath")).toString()));
+                    VSCodeProject{position + prevCount, obj.value(QStringLiteral("name")).toString(), projectPath});
             }
         }
     }

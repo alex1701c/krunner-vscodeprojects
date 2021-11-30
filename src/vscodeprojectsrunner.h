@@ -5,13 +5,10 @@
 #include <QFileSystemWatcher>
 #include <QRegularExpression>
 
-class VSCodeProject {
-public:
+struct VSCodeProject {
     int position;
     QString name;
     QString path;
-
-    VSCodeProject(int position, const QString &name, const QString &path) : position(position), name(name), path(path) {}
 };
 
 class VSCodeProjectsRunner : public Plasma::AbstractRunner {
