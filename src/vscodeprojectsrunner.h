@@ -29,6 +29,8 @@ public: // Plasma::AbstractRunner API
     void match(Plasma::RunnerContext &context) override;
 
     void run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) override;
+private:
+    QList<VSCodeProject> loadProjects(const QString &dirName);
 };
 
 #endif
