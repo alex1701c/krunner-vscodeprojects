@@ -68,7 +68,7 @@ void VSCodeProjectsRunner::run(const Plasma::RunnerContext &context, const Plasm
     if (!QStandardPaths::findExecutable(QStringLiteral("codium")).isEmpty()) {
         executable = QStringLiteral("codium");
     }
-    QProcess::startDetached(QStringLiteral("code"), {match.data().toString()});
+    QProcess::startDetached(executable, {match.data().toString()});
 }
 
 QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) {
