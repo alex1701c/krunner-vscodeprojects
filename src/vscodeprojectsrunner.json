@@ -13,5 +13,6 @@
         "License": "LGPL 3",
         "Name": "VSCodeRunner",
         "Version": "1.0.1"
-    }
+    },
+    "X-Plasma-Runner-Unique-Results": true
 }

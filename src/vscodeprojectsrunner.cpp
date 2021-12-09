@@ -54,6 +54,10 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
 
 Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const QString &data, double relevance) {
     auto match = Plasma::QueryMatch(this);
+    QUrl idUrl;
+    idUrl.setScheme(id());
+    idUrl.setPath(data);
+    match.setId(idUrl.toString());
     match.setText(text);
     match.setData(data);
     match.setRelevance(relevance);
