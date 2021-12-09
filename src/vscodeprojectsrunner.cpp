@@ -114,6 +114,25 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
         }
     }
 
+    // recently opened projects from vscode
+    const QString vscodeJsonFileName = QStandardPaths::locate(QStandardPaths::ConfigLocation, dirName + "/storage.json");
+    QFile vscodeJsonFile(vscodeJsonFileName);
+    if (vscodeJsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QString content = vscodeJsonFile.readAll();
+        QJsonObject root = QJsonDocument::fromJson(content.toLocal8Bit()).object();
+        auto paths = root.value(QLatin1String("openedPathsList")).toObject().value(QLatin1String("entries")).toArray();
+        for (const auto &pathObj : paths) {
+            QString fileOrFolderUri = pathObj.toObject().value(QLatin1String("folderUri")).toString();
+            if (fileOrFolderUri.isEmpty()) {
+                fileOrFolderUri = pathObj.toObject().value(QLatin1String("fileUri")).toString();
+            }
+            const QString localFile = QUrl(fileOrFolderUri).toLocalFile();
+            if (!localFile.isEmpty()) {
+                projects.append(VSCodeProject{1, QFileInfo(localFile).fileName(), localFile});
+            }
+        }
+    }
+
     return projects;
 }
 
