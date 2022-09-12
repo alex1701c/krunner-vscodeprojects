@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 project(vscodeprojectsrunner)
 set(CMAKE_PROJECT_VERSION  "1.0.1")
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/alex1701c/krunner-vscodeprojects")
