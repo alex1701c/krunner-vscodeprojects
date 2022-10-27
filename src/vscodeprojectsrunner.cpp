@@ -10,6 +10,7 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaDat
     setObjectName(QStringLiteral("VSCodeProjectsRunner"));
     if (!QStandardPaths::findExecutable(QStringLiteral("code")).isEmpty()) {
         projects << loadProjects(QStringLiteral("Code"));
+        projects << loadProjects(QStringLiteral("Code - OSS"));
     }
     if (!QStandardPaths::findExecutable(QStringLiteral("codium")).isEmpty()) {
         projects << loadProjects(QStringLiteral("VSCodium"));
