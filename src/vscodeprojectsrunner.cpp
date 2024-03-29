@@ -1,13 +1,26 @@
 #include "vscodeprojectsrunner.h"
 
 // KF
+#include <KConfigGroup>
 #include <KLocalizedString>
-#include <QtCore>
 #include <KSharedConfig>
+#include <krunner_version.h>
+
+#include <QDir>
+#include <QFileInfo>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QProcess>
+#include <QString>
 
 VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-        : Plasma::AbstractRunner(parent, data, args) {
-    setObjectName(QStringLiteral("VSCodeProjectsRunner"));
+#if KRUNNER_VERSION_MAJOR == 5
+    : KRunner::AbstractRunner(parent, data, args)
+#else
+    : KRunner::AbstractRunner(parent, data)
+#endif
+{
     if (!QStandardPaths::findExecutable(QStringLiteral("code")).isEmpty()) {
         projects << loadProjects(QStringLiteral("Code"));
         projects << loadProjects(QStringLiteral("Code - OSS"));
@@ -15,46 +28,48 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaDat
     if (!QStandardPaths::findExecutable(QStringLiteral("codium")).isEmpty()) {
         projects << loadProjects(QStringLiteral("VSCodium"));
     }
+    qWarning() << projects.size();
 }
 
-void VSCodeProjectsRunner::reloadConfiguration() {
-
-
+void VSCodeProjectsRunner::reloadConfiguration()
+{
     appNameMatches = config().readEntry("appNameMatches", true);
     projectNameMatches = config().readEntry("projectNameMatches", true);
 }
 
-void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
-    if (!context.isValid()) return;
+void VSCodeProjectsRunner::match(KRunner::RunnerContext &context)
+{
+    if (!context.isValid())
+        return;
     const QString term = context.query();
 
     if (projectNameMatches && (term.size() > 2 || context.singleRunnerQueryMode())) {
         for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(term, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
-                    context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                    context.addMatch(createMatch("Open " + project.name, project.path, (double)term.length() / project.name.length()));
                 }
             }
         }
     }
     if (appNameMatches) {
         const auto match = nameQueryRegex.match(term);
-        if (!match.hasMatch()) return;
+        if (!match.hasMatch())
+            return;
         const QString projectQuery = match.captured(QStringLiteral("query"));
-        for (const auto &project: qAsConst(projects)) {
+        for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
-                    context.addMatch(
-                            createMatch("Open " + project.name, project.path, (double) project.position / 20)
-                    );
+                    context.addMatch(createMatch("Open " + project.name, project.path, (double)project.position / 20));
                 }
             }
         }
     }
 }
 
-Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const QString &data, double relevance) {
-    auto match = Plasma::QueryMatch(this);
+KRunner::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const QString &data, double relevance)
+{
+    auto match = KRunner::QueryMatch(this);
     QUrl idUrl;
     idUrl.setScheme(id());
     idUrl.setPath(data);
@@ -62,13 +77,12 @@ Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const 
     match.setText(text);
     match.setData(data);
     match.setRelevance(relevance);
-    match.setIcon(icon());
+    match.setIconName(metadata().iconName());
     return match;
 }
 
-void VSCodeProjectsRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) {
-    Q_UNUSED(context)
-
+void VSCodeProjectsRunner::run(const KRunner::RunnerContext &, const KRunner::QueryMatch &match)
+{
     QString executable = QStringLiteral("code");
     if (!QStandardPaths::findExecutable(QStringLiteral("codium")).isEmpty()) {
         executable = QStringLiteral("codium");
@@ -76,11 +90,13 @@ void VSCodeProjectsRunner::run(const Plasma::RunnerContext &context, const Plasm
     QProcess::startDetached(executable, {match.data().toString()});
 }
 
-QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) {
+QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName)
+{
     QList<VSCodeProject> projects;
     // Saved projects
 
-    const QString projectManagerRoot = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/"+ dirName +"/User/globalStorage/alefragnani.project-manager/";
+    const QString projectManagerRoot =
+        QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/" + dirName + "/User/globalStorage/alefragnani.project-manager/";
     QFile file(projectManagerRoot + "projects.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString content = file.readAll();
@@ -94,8 +110,7 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
                 const auto obj = item.toObject();
                 if (obj.value(QStringLiteral("enabled")).toBool()) {
                     --position;
-                    const QString projectPath = obj.value(QStringLiteral("rootPath")).toString()
-                                                    .replace(QLatin1String("$home"), QDir::homePath());
+                    const QString projectPath = obj.value(QStringLiteral("rootPath")).toString().replace(QLatin1String("$home"), QDir::homePath());
                     projects.append(VSCodeProject{position, obj.value(QStringLiteral("name")).toString(), projectPath});
                 }
             }
@@ -113,8 +128,7 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
             for (const auto &item : array) {
                 const auto obj = item.toObject();
                 const QString projectPath = obj.value(QStringLiteral("fullPath")).toString();
-                projects.append(
-                    VSCodeProject{position + prevCount, obj.value(QStringLiteral("name")).toString(), projectPath});
+                projects.append(VSCodeProject{position + prevCount, obj.value(QStringLiteral("name")).toString(), projectPath});
             }
         }
     }
@@ -141,10 +155,7 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
     return projects;
 }
 
-
-
-K_EXPORT_PLASMA_RUNNER_WITH_JSON(VSCodeProjectsRunner, "vscodeprojectsrunner.json")
+K_PLUGIN_CLASS_WITH_JSON(VSCodeProjectsRunner, "vscodeprojectsrunner.json")
 
 // needed for the QObject subclass declared as part of K_EXPORT_PLASMA_RUNNER
 #include "vscodeprojectsrunner.moc"
-

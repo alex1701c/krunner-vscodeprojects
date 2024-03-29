@@ -2,7 +2,6 @@
 #define VSCODEPROJECTSRUNNER_H
 
 #include <KRunner/AbstractRunner>
-#include <QFileSystemWatcher>
 #include <QRegularExpression>
 
 struct VSCodeProject {
@@ -11,8 +10,9 @@ struct VSCodeProject {
     QString path;
 };
 
-class VSCodeProjectsRunner : public Plasma::AbstractRunner {
-Q_OBJECT
+class VSCodeProjectsRunner : public KRunner::AbstractRunner
+{
+    Q_OBJECT
 
 public:
     VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
@@ -21,14 +21,15 @@ public:
     QList<VSCodeProject> projects;
     bool projectNameMatches, appNameMatches;
 
-    Plasma::QueryMatch createMatch(const QString &text, const QString &data, double relevance);
+    KRunner::QueryMatch createMatch(const QString &text, const QString &data, double relevance);
 
 public: // Plasma::AbstractRunner API
     void reloadConfiguration() override;
 
-    void match(Plasma::RunnerContext &context) override;
+    void match(KRunner::RunnerContext &context) override;
 
-    void run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) override;
+    void run(const KRunner::RunnerContext &context, const KRunner::QueryMatch &match) override;
+
 private:
     QList<VSCodeProject> loadProjects(const QString &dirName);
 };
