@@ -157,5 +157,5 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName)
 
 K_PLUGIN_CLASS_WITH_JSON(VSCodeProjectsRunner, "vscodeprojectsrunner.json")
 
-// needed for the QObject subclass declared as part of K_EXPORT_PLASMA_RUNNER
+#include "moc_vscodeprojectsrunner.cpp"
 #include "vscodeprojectsrunner.moc"
