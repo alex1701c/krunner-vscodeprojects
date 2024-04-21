@@ -9,7 +9,6 @@
         "Description": "VSCodeProjectsRunner runner",
         "EnabledByDefault": true,
         "Icon": "code_runner",
-        "Id": "vscodeprojectsrunner",
         "License": "LGPL 3",
         "Name": "VSCodeRunner",
         "Version": "1.0.1"

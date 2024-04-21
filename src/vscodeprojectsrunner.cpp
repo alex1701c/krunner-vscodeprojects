@@ -21,6 +21,7 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaDat
     : KRunner::AbstractRunner(parent, data)
 #endif
 {
+    Q_UNUSED(args)
     if (!QStandardPaths::findExecutable(QStringLiteral("code")).isEmpty()) {
         projects << loadProjects(QStringLiteral("Code"));
         projects << loadProjects(QStringLiteral("Code - OSS"));
@@ -28,7 +29,6 @@ VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaDat
     if (!QStandardPaths::findExecutable(QStringLiteral("codium")).isEmpty()) {
         projects << loadProjects(QStringLiteral("VSCodium"));
     }
-    qWarning() << projects.size();
 }
 
 void VSCodeProjectsRunner::reloadConfiguration()
@@ -39,16 +39,12 @@ void VSCodeProjectsRunner::reloadConfiguration()
 
 void VSCodeProjectsRunner::match(KRunner::RunnerContext &context)
 {
-    if (!context.isValid())
-        return;
     const QString term = context.query();
 
     if (projectNameMatches && (term.size() > 2 || context.singleRunnerQueryMode())) {
         for (const auto &project : qAsConst(projects)) {
-            if (project.name.startsWith(term, Qt::CaseInsensitive)) {
-                if (QFileInfo::exists(project.path)) {
-                    context.addMatch(createMatch("Open " + project.name, project.path, (double)term.length() / project.name.length()));
-                }
+            if (project.name.startsWith(term, Qt::CaseInsensitive) && QFileInfo::exists(project.path)) {
+                context.addMatch(createMatch("Open " + project.name, project.path, (double)term.length() / project.name.length()));
             }
         }
     }

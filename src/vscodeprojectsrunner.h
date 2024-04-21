@@ -16,22 +16,16 @@ class VSCodeProjectsRunner : public KRunner::AbstractRunner
 
 public:
     VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
-
-    const QRegularExpression nameQueryRegex = QRegularExpression(QStringLiteral("^(vs)?code( (?<query>.+))?$"));
-    QList<VSCodeProject> projects;
-    bool projectNameMatches, appNameMatches;
-
-    KRunner::QueryMatch createMatch(const QString &text, const QString &data, double relevance);
-
-public: // Plasma::AbstractRunner API
     void reloadConfiguration() override;
-
     void match(KRunner::RunnerContext &context) override;
-
     void run(const KRunner::RunnerContext &context, const KRunner::QueryMatch &match) override;
 
 private:
+    KRunner::QueryMatch createMatch(const QString &text, const QString &data, double relevance);
     QList<VSCodeProject> loadProjects(const QString &dirName);
+    const QRegularExpression nameQueryRegex = QRegularExpression(QStringLiteral("^(vs)?code( (?<query>.+))?$"));
+    QList<VSCodeProject> projects;
+    bool projectNameMatches, appNameMatches;
 };
 
 #endif
