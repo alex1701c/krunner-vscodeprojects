@@ -1,7 +1,7 @@
 ## VSCode Projects Runner
-This plugin use the [Project Manager plugin](https://github.com/alefragnani/vscode-project-manager) from VSCode to read the projects.
+This plugin uses the [Project Manager plugin](https://github.com/alefragnani/vscode-project-manager) from VSCode to read the projects.
 
-## Required Dependencies
+## Required Dependencies (KF5)
 
 Debian/Ubuntu:  
 `sudo apt install cmake extra-cmake-modules build-essential libkf5runner-dev libkf5textwidgets-dev qtdeclarative5-dev gettext`
@@ -17,21 +17,8 @@ For archlinux users there is [AUR](https://aur.archlinux.org/packages/krunner-vs
 
 The easiest way to install is:  
 `curl https://raw.githubusercontent.com/alex1701c/krunner-vscodeprojects/master/install.sh | bash`  
-Or you can install it without admin privileges:  
-`curl https://raw.githubusercontent.com/alex1701c/krunner-vscodeprojects/master/install-user.sh | bash`  
 
-Manual steps:  
-```
-git clone https://github.com/alex1701c/krunner-vscodeprojects
-cd krunner-vscodeprojects
-mkdir -p build
-cd build
-cmake -DQT_PLUGIN_INSTALL_DIR=`kf5-config --qt-plugins` -DCMAKE_BUILD_TYPE=Release ..
-make
-sudo make install
-```
-
-Restart krunner to load the runner (in a terminal type: kquitapp5 krunner;kstart5 krunner )
+Or you can clone the repository and run the install.sh script.
 
 After this you should see your runner in the system settings:
 
