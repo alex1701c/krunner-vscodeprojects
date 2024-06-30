@@ -1,15 +1,50 @@
 ## VSCode Projects Runner
 This plugin uses the [Project Manager plugin](https://github.com/alefragnani/vscode-project-manager) from VSCode to read the projects.
 
-## Required Dependencies (KF5)
+## Required Dependencies
 
-Debian/Ubuntu:  
-`sudo apt install cmake extra-cmake-modules build-essential libkf5runner-dev libkf5textwidgets-dev qtdeclarative5-dev gettext`
+<details>
+<summary><b>Debian/Ubuntu</b></summary>
 
-openSUSE  
-`sudo zypper install cmake extra-cmake-modules libQt5Widgets5 libQt5Core5 libqt5-qtlocation-devel ki18n-devel ktextwidgets-devel kservice-devel krunner-devel gettext-tools kconfigwidgets-devel`  
-Fedora  
-`sudo dnf install cmake extra-cmake-modules kf5-ki18n-devel kf5-kservice-devel kf5-krunner-devel kf5-ktextwidgets-devel kf5-kconfigwidgets-devel qt5-qtdeclarative-devel gettext`  
+Plasma5:  
+```bash
+sudo apt install git cmake extra-cmake-modules build-essential libkf5runner-dev libkf5i18n-dev qtdeclarative5-dev gettext libkf5dbusaddons-bin
+```
+Plasma6:  
+```bash
+sudo apt install git cmake extra-cmake-modules build-essential libkf6runner-dev libkf6i18n-dev kf6-kdbusaddons
+```
+
+</details>
+
+<details>
+<summary><b>OpenSUSE</b></summary>
+
+Plasma5:  
+```bash
+sudo zypper install git cmake extra-cmake-modules ki18n-devel krunner-devel kconfigwidgets-devel kcmutils-devel gettext-tools kdbusaddons-tools
+```
+Plasma6:  
+```bash
+sudo zypper install git cmake extra-cmake-modules kf6-ki18n-devel kf6-krunner-devel gettext-tools kf6-kdbusaddons-tools
+```
+
+</details>
+
+<details>
+<summary><b>Fedora</b></summary>
+
+Plasma5:  
+```bash
+sudo dnf install git cmake extra-cmake-modules kf5-ki18n-devel kf5-krunner-devel gettext kf5-kcmutils-devel
+```
+Plasma6:  
+```bash
+sudo dnf install git cmake extra-cmake-modules kf6-ki18n-devel kf6-krunner-devel kf6-kcmutils-devel gettext
+```
+
+</details>
+
 
 ## Build instructions
 
