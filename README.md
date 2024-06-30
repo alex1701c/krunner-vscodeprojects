@@ -26,7 +26,7 @@ sudo zypper install git cmake extra-cmake-modules ki18n-devel krunner-devel kcon
 ```
 Plasma6:  
 ```bash
-sudo zypper install git cmake extra-cmake-modules kf6-ki18n-devel kf6-krunner-devel gettext-tools kf6-kdbusaddons-tools
+sudo zypper install git cmake kf6-extra-cmake-modules kf6-ki18n-devel kf6-krunner-devel gettext-tools kf6-kdbusaddons-tools
 ```
 
 </details>
