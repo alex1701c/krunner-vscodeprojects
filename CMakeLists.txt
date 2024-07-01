@@ -43,7 +43,12 @@ if (CPACK_DEBIAN) # -DCPACK_DEBIAN=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib/x86_6
 	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libkf5runner5 (>=${KF5Runner_VERSION})")
 	set(CPACK_DEBIAN_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Debian.deb")
 	set(CPACK_GENERATOR "DEB")
-elseif(CPACK_FEDORA) # -DCPACK_FEDORA=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt5/plugins
+elseif(CPACK_FEDORA AND BUILD_WITH_QT6) # -DCPACK_FEDORA=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt6/plugins -DBUILD_WITH_QT6=ON
+	set(CPACK_RPM_PACKAGE_REQUIRES "kf6-krunner >= ${KF6Runner_VERSION}")
+	set(CPACK_RPM_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Fedora.rpm")
+	set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/usr/lib64/qt6;/usr/lib64/qt6/plugins;/usr/lib64/qt6/plugins/kf6;/usr/lib64/qt6/plugins/kf6/krunner;/usr/share/kservices6;/usr/share/icons")
+	set(CPACK_GENERATOR "RPM")
+elseif(CPACK_FEDORA AND NOT BUILD_WITH_QT6) # -DCPACK_FEDORA=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt5/plugins
 	set(CPACK_RPM_PACKAGE_REQUIRES "kf5-krunner >= ${KF5Runner_VERSION}")
 	set(CPACK_RPM_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Fedora.rpm")
 	set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/usr/lib64/qt5;/usr/lib64/qt5/plugins;/usr/lib64/qt5/plugins/kf5;/usr/lib64/qt5/plugins/kf5/krunner;/usr/share/kservices5;/usr/share/icons")
