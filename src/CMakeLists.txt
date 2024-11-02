@@ -1,5 +1,6 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"plasma_runner_org.kde.vscodeprojectsrunner\")
 
+configure_file(vscodeprojectsrunner.json.in vscodeprojectsrunner.json)
 set(vscodeprojectsrunner_SRCS vscodeprojectsrunner.cpp)
 
 add_library(krunner_vscodeprojectsrunner MODULE ${vscodeprojectsrunner_SRCS})

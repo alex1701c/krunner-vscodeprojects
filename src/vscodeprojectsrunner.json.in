@@ -11,7 +11,7 @@
         "Icon": "code_runner",
         "License": "LGPL 3",
         "Name": "VSCodeRunner",
-        "Version": "1.0.1"
+        "Version": "@CMAKE_PROJECT_VERSION@"
     },
     "X-Plasma-Runner-Unique-Results": true
 }
